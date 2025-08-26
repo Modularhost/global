@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Plataforma</title>
+    <style>
+        /* ===== CSS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1d1f27, #2e3440);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #00b894;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #dfe6e9;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .page-card {
+            background: #2d3436;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+
+        .page-card:hover {
+            transform: scale(1.05);
+            background: #00b894;
+        }
+
+        .page-card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .page-card p {
+            font-size: 0.9rem;
+            color: #dfe6e9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mi Plataforma Web</h1>
+        <p>Selecciona una página para abrirla</p>
+    </header>
+
+    <main>
+        <div class="grid-container" id="pagesContainer">
+            <!-- Los enlaces se generarán desde JS -->
+        </div>
+    </main>
+
+    <script>
+        // ===== JS =====
+        const pages = [
+            { name: "Página 1", description: "Descripción de la página 1", url: "pagina1.html" },
+            { name: "Página 2", description: "Descripción de la página 2", url: "pagina2.html" },
+            { name: "Página 3", description: "Descripción de la página 3", url: "pagina3.html" },
+            { name: "Página 4", description: "Descripción de la página 4", url: "pagina4.html" }
+        ];
+
+        const container = document.getElementById("pagesContainer");
+
+        pages.forEach(page => {
+            const card = document.createElement("div");
+            card.classList.add("page-card");
+            card.innerHTML = `
+                <h2>${page.name}</h2>
+                <p>${page.description}</p>
+            `;
+
+            card.addEventListener("click", () => {
+                window.location.href = page.url;
+            });
+
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
