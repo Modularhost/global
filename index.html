@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bienvenido — Plataforma Tecnológica</title>
+  <style>
+    :root{
+      --bg:#fdfdfd;
+      --muted:#6b7280;
+      --primary:#2563eb;
+      --secondary:#7c3aed;
+      --gradient:linear-gradient(135deg, var(--primary), var(--secondary));
+      --shadow:0 12px 50px rgba(0,0,0,0.1);
+      font-family:"Poppins", "Segoe UI", sans-serif;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;background:var(--bg);color:#111827;overflow-x:hidden;}
+
+    header{
+      position:absolute;top:0;left:0;width:100%;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;z-index:3;
+    }
+    header .logo{
+      font-weight:700;font-size:1.5rem;background:var(--gradient);-webkit-background-clip:text;color:transparent;
+    }
+
+    /* Hero */
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px;position:relative;overflow:hidden}
+    .hero{max-width:1300px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;z-index:2;}
+
+    .content-box{
+      background:#fff;
+      padding:50px;
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      animation:fadeInUp .9s ease;
+    }
+
+    .content-box h1{font-size:3rem;line-height:1.2;margin:0;font-weight:800;background:var(--gradient);-webkit-background-clip:text;color:transparent;}
+    .content-box p{font-size:1.15rem;line-height:1.7;color:var(--muted);margin:22px 0 32px;}
+
+    /* Buttons */
+    .actions{display:flex;gap:20px;flex-wrap:wrap}
+    .btn{padding:16px 28px;border-radius:14px;font-weight:600;font-size:1rem;cursor:pointer;border:none;transition:all .25s ease;letter-spacing:.3px}
+    .btn-primary{background:var(--gradient);color:#fff;box-shadow:var(--shadow)}
+    .btn-primary:hover{transform:translateY(-3px);}
+    .btn-outline{background:transparent;color:var(--primary);border:2px solid var(--primary)}
+    .btn-outline:hover{background:var(--primary);color:#fff}
+
+    /* Highlights */
+    .highlights{display:flex;gap:28px;margin-top:40px}
+    .highlight{flex:1;background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:24px;text-align:center;transition:.3s ease}
+    .highlight:hover{transform:translateY(-4px)}
+    .highlight h3{margin:0;font-size:1.5rem;color:var(--primary)}
+    .highlight p{margin:8px 0 0;font-size:1rem;color:var(--muted)}
+
+    /* Background Canvas */
+    .background{position:absolute;inset:0;z-index:1;overflow:hidden;}
+    canvas{position:absolute;inset:0;width:100%;height:100%;}
+
+    @keyframes fadeInUp{
+      0%{opacity:0;transform:translateY(40px)}
+      100%{opacity:1;transform:translateY(0)}
+    }
+
+    /* Responsive */
+    @media(max-width:1000px){
+      .hero{grid-template-columns:1fr;text-align:center}
+      .actions{justify-content:center}
+      .highlights{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">TechVision</div>
+  </header>
+
+  <div class="wrap">
+    <div class="background"><canvas id="bgCanvas"></canvas></div>
+    <section class="hero">
+      <div class="content-box">
+        <h1>Bienvenido a la nueva era tecnológica</h1>
+        <p>Una plataforma de vanguardia con un diseño refinado, animaciones fluidas y conectividad inteligente para llevar tu negocio al siguiente nivel.</p>
+        <div class="actions">
+          <button class="btn btn-primary">Comenzar</button>
+          <button class="btn btn-outline">Descubrir más</button>
+        </div>
+        <div class="highlights">
+          <div class="highlight">
+            <h3>⚡ Rendimiento</h3>
+            <p>Optimizado para máxima velocidad y eficiencia.</p>
+          </div>
+          <div class="highlight">
+            <h3>🔒 Seguridad</h3>
+            <p>Protección avanzada con encriptación de última generación.</p>
+          </div>
+          <div class="highlight">
+            <h3>🌎 Escalabilidad</h3>
+            <p>Listo para crecer y expandirse sin límites.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <img src="https://cdn.jsdelivr.net/gh/akzhy/VantaJS/images/network.svg" alt="Tecnología" style="width:100%;max-width:520px"/>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Animated background with network-style particles
+    const canvas=document.getElementById('bgCanvas');
+    const ctx=canvas.getContext('2d');
+    let particles=[];
+
+    function resize(){
+      canvas.width=window.innerWidth;
+      canvas.height=window.innerHeight;
+    }
+    window.addEventListener('resize',resize);
+    resize();
+
+    class Particle{
+      constructor(){
+        this.x=Math.random()*canvas.width;
+        this.y=Math.random()*canvas.height;
+        this.r=Math.random()*2+1;
+        this.dx=(Math.random()-0.5)*1.2;
+        this.dy=(Math.random()-0.5)*1.2;
+      }
+      draw(){
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+        ctx.fillStyle='#6366f1';
+        ctx.fill();
+      }
+      update(){
+        this.x+=this.dx;
+        this.y+=this.dy;
+        if(this.x<0||this.x>canvas.width) this.dx*=-1;
+        if(this.y<0||this.y>canvas.height) this.dy*=-1;
+        this.draw();
+      }
+    }
+
+    function init(){
+      particles=[];
+      for(let i=0;i<150;i++) particles.push(new Particle());
+    }
+
+    function animate(){
+      requestAnimationFrame(animate);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particles.forEach((p,i)=>{
+        p.update();
+        for(let j=i+1;j<particles.length;j++){
+          const p2=particles[j];
+          const dist=Math.hypot(p.x-p2.x,p.y-p2.y);
+          if(dist<140){
+            ctx.beginPath();
+            ctx.strokeStyle='rgba(37,99,235,0.15)';
+            ctx.lineWidth=1;
+            ctx.moveTo(p.x,p.y);
+            ctx.lineTo(p2.x,p2.y);
+            ctx.stroke();
+          }
+        }
+      });
+    }
+
+    init();
+    animate();
+  </script>
+</body>
+</html>
