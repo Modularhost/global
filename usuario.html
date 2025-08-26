@@ -28,14 +28,17 @@
 <div class="modal" id="loginModal">
   <div class="modal-content">
     <h2>Iniciar Sesión</h2>
-    <input type="text" id="loginUsername" placeholder="Nombre de usuario">
+    <input type="email" id="loginEmail" placeholder="Correo electrónico">
     <input type="password" id="loginPassword" placeholder="Contraseña">
     <button id="loginBtn">Iniciar Sesión</button>
   </div>
 </div>
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBegMx8SAdiEoW9Ik8akA7XJEaijvD5gy8",
@@ -49,30 +52,56 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
-const registerBtn = document.getElementById('registerBtn');
-registerBtn.addEventListener('click', ()=>{
+// Registro de usuario
+document.getElementById('registerBtn').addEventListener('click', ()=>{
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
+  const fullname = document.getElementById('fullname').value;
   const username = document.getElementById('username').value;
+
   auth.createUserWithEmailAndPassword(email,password)
   .then(userCredential=>{
-    alert('Usuario registrado con éxito');
-    document.getElementById('loginModal').style.display='flex';
+    const user = userCredential.user;
+
+    // Guardar datos adicionales en Firestore
+    db.collection('usuarios').doc(user.uid).set({
+      fullname: fullname,
+      username: username,
+      email: email
+    })
+    .then(()=>{
+      alert('Usuario registrado con éxito');
+      document.getElementById('loginModal').style.display='flex';
+    })
+    .catch(error=>{
+      console.error('Error guardando datos adicionales:', error);
+    });
   })
   .catch(error=>{
     alert(error.message);
   });
 });
 
-const loginBtn = document.getElementById('loginBtn');
-loginBtn.addEventListener('click',()=>{
-  const username = document.getElementById('loginUsername').value;
+// Login de usuario
+document.getElementById('loginBtn').addEventListener('click', ()=>{
+  const email = document.getElementById('loginEmail').value;
   const password = document.getElementById('loginPassword').value;
 
-  auth.signInWithEmailAndPassword(username+'@example.com',password)
-  .then(()=>{
-    window.location.href='plataforma.html';
+  auth.signInWithEmailAndPassword(email,password)
+  .then(userCredential=>{
+    // Opcional: obtener datos adicionales del usuario
+    const uid = userCredential.user.uid;
+    db.collection('usuarios').doc(uid).get()
+    .then(doc=>{
+      if(doc.exists){
+        const data = doc.data();
+        console.log('Usuario:', data);
+        // Redirigir a plataforma
+        window.location.href='plataforma.html';
+      }
+    });
   })
   .catch(error=>{
     alert('Usuario o contraseña incorrectos');
