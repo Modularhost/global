@@ -24,7 +24,10 @@
       display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.5rem;color:#111827;
     }
     .logo-icon{
-      width:34px;height:34px;border-radius:8px;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;box-shadow:var(--shadow);
+      width:38px;height:38px;border-radius:6px;background:var(--gradient);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);
+    }
+    .logo-icon svg{
+      width:24px;height:24px;fill:#fff;
     }
 
     /* Hero */
@@ -67,7 +70,6 @@
       100%{opacity:1;transform:translateY(0)}
     }
 
-    /* Responsive */
     @media(max-width:1000px){
       .hero{grid-template-columns:1fr;text-align:center}
       .actions{justify-content:center}
@@ -78,7 +80,15 @@
 <body>
   <header>
     <div class="logo">
-      <div class="logo-icon">M</div>
+      <div class="logo-icon">
+        <!-- Logo tipo Windows con 4 cuadrados -->
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="24" height="24" rx="4" ry="4" fill="white"/>
+          <rect x="34" y="6" width="24" height="24" rx="4" ry="4" fill="white"/>
+          <rect x="6" y="34" width="24" height="24" rx="4" ry="4" fill="white"/>
+          <rect x="34" y="34" width="24" height="24" rx="4" ry="4" fill="white"/>
+        </svg>
+      </div>
       ModularHost
     </div>
   </header>
@@ -115,15 +125,11 @@
   </div>
 
   <script>
-    // Animated background with network-style particles
     const canvas=document.getElementById('bgCanvas');
     const ctx=canvas.getContext('2d');
     let particles=[];
 
-    function resize(){
-      canvas.width=window.innerWidth;
-      canvas.height=window.innerHeight;
-    }
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
     window.addEventListener('resize',resize);
     resize();
 
@@ -135,26 +141,17 @@
         this.dx=(Math.random()-0.5)*1.2;
         this.dy=(Math.random()-0.5)*1.2;
       }
-      draw(){
-        ctx.beginPath();
-        ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-        ctx.fillStyle='#6366f1';
-        ctx.fill();
-      }
+      draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='#6366f1';ctx.fill();}
       update(){
         this.x+=this.dx;
         this.y+=this.dy;
-        if(this.x<0||this.x>canvas.width) this.dx*=-1;
-        if(this.y<0||this.y>canvas.height) this.dy*=-1;
+        if(this.x<0||this.x>canvas.width)this.dx*=-1;
+        if(this.y<0||this.y>canvas.height)this.dy*=-1;
         this.draw();
       }
     }
 
-    function init(){
-      particles=[];
-      for(let i=0;i<150;i++) particles.push(new Particle());
-    }
-
+    function init(){particles=[];for(let i=0;i<150;i++)particles.push(new Particle());}
     function animate(){
       requestAnimationFrame(animate);
       ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -164,19 +161,13 @@
           const p2=particles[j];
           const dist=Math.hypot(p.x-p2.x,p.y-p2.y);
           if(dist<140){
-            ctx.beginPath();
-            ctx.strokeStyle='rgba(37,99,235,0.15)';
-            ctx.lineWidth=1;
-            ctx.moveTo(p.x,p.y);
-            ctx.lineTo(p2.x,p2.y);
-            ctx.stroke();
+            ctx.beginPath();ctx.strokeStyle='rgba(37,99,235,0.15)';ctx.lineWidth=1;
+            ctx.moveTo(p.x,p.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
           }
         }
       });
     }
-
-    init();
-    animate();
+    init();animate();
   </script>
 </body>
 </html>
