@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bienvenido — Plataforma Tecnológica</title>
+  <title>Bienvenido — ModularHost</title>
   <style>
     :root{
       --bg:#fdfdfd;
@@ -18,10 +18,13 @@
     body{margin:0;background:var(--bg);color:#111827;overflow-x:hidden;}
 
     header{
-      position:absolute;top:0;left:0;width:100%;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;z-index:3;
+      position:absolute;top:0;left:0;width:100%;padding:20px 60px;display:flex;align-items:center;z-index:3;
     }
-    header .logo{
-      font-weight:700;font-size:1.5rem;background:var(--gradient);-webkit-background-clip:text;color:transparent;
+    .logo{
+      display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.5rem;color:#111827;
+    }
+    .logo-icon{
+      width:34px;height:34px;border-radius:8px;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;box-shadow:var(--shadow);
     }
 
     /* Hero */
@@ -74,7 +77,10 @@
 </head>
 <body>
   <header>
-    <div class="logo">TechVision</div>
+    <div class="logo">
+      <div class="logo-icon">M</div>
+      ModularHost
+    </div>
   </header>
 
   <div class="wrap">
@@ -89,16 +95,16 @@
         </div>
         <div class="highlights">
           <div class="highlight">
-            <h3>⚡ Rendimiento</h3>
-            <p>Optimizado para máxima velocidad y eficiencia.</p>
+            <h3>🚀 Innovación</h3>
+            <p>Soluciones modernas que marcan la diferencia.</p>
           </div>
           <div class="highlight">
-            <h3>🔒 Seguridad</h3>
-            <p>Protección avanzada con encriptación de última generación.</p>
+            <h3>☁️ Cloud</h3>
+            <p>Infraestructura modular y escalable en la nube.</p>
           </div>
           <div class="highlight">
-            <h3>🌎 Escalabilidad</h3>
-            <p>Listo para crecer y expandirse sin límites.</p>
+            <h3>🤝 Soporte</h3>
+            <p>Acompañamiento experto en cada paso del camino.</p>
           </div>
         </div>
       </div>
