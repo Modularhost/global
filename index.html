@@ -70,6 +70,12 @@
     .background{position:absolute;inset:0;z-index:1;overflow:hidden;}
     canvas{position:absolute;inset:0;width:100%;height:100%;}
 
+    /* Modal */
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:10;}
+    .modal-content{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:100%;box-shadow:0 12px 50px rgba(0,0,0,0.2);}
+    .modal-content input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
+    .modal-content button{width:100%;padding:12px;margin-top:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
+
     @keyframes fadeInUp{
       0%{opacity:0;transform:translateY(40px)}
       100%{opacity:1;transform:translateY(0)}
@@ -130,11 +136,77 @@
     </section>
   </div>
 
+  <!-- Modal de login -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <h2 style="text-align:center;margin-bottom:20px;color:#2563eb;">Iniciar Sesión</h2>
+      <input type="text" id="loginUsername" placeholder="Nombre de usuario">
+      <input type="password" id="loginPassword" placeholder="Contraseña">
+      <button id="loginBtn">Iniciar Sesión</button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBegMx8SAdiEoW9Ik8akA7XJEaijvD5gy8",
+      authDomain: "modularhost.firebaseapp.com",
+      projectId: "modularhost",
+      storageBucket: "modularhost.firebasestorage.app",
+      messagingSenderId: "383598848442",
+      appId: "1:383598848442:web:f87fc6cced7db553535583",
+      measurementId: "G-03MG3Y0JQ0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Abrir modal al presionar "Comenzar"
+    document.querySelector('.btn-primary').addEventListener('click', ()=>{
+      document.getElementById('loginModal').style.display='flex';
+    });
+
+    // Login usando username
+    document.getElementById('loginBtn').addEventListener('click', async ()=>{
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if(!username || !password){
+        alert('Ingrese nombre de usuario y contraseña');
+        return;
+      }
+
+      try {
+        // Buscar el usuario en Firestore por username
+        const querySnapshot = await db.collection('usuarios').where('username', '==', username).get();
+        if(querySnapshot.empty){
+          alert('Usuario no encontrado');
+          return;
+        }
+
+        const userData = querySnapshot.docs[0].data();
+        const email = userData.email; // Obtenemos el email registrado
+
+        // Iniciar sesión con email y contraseña
+        await auth.signInWithEmailAndPassword(email, password);
+
+        // Redirigir a plataforma
+        window.location.href = 'plataforma.html';
+      } catch(error){
+        console.error(error);
+        alert('Usuario o contraseña incorrectos');
+      }
+    });
+
+    // Fondo animado de partículas
     const canvas=document.getElementById('bgCanvas');
     const ctx=canvas.getContext('2d');
     let particles=[];
-
     function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
     window.addEventListener('resize',resize);
     resize();
