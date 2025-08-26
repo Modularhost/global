@@ -1,115 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Plataforma</title>
-    <style>
-        /* ===== CSS ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Plataforma Profesional</title>
+<style>
+    /* ===== Reset y base ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body {
+        background: #121212;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    header {
+        text-align: center;
+        padding: 2rem 1rem;
+    }
+    header h1 {
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
+        color: #4ade80;
+        letter-spacing: 1px;
+    }
+    header p {
+        font-size: 1.1rem;
+        color: #cbd5e1;
+    }
 
-        body {
-            background: linear-gradient(135deg, #1d1f27, #2e3440);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    /* ===== Grid de páginas ===== */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+        width: 90%;
+        max-width: 1100px;
+    }
 
-        header {
-            text-align: center;
-            padding: 2rem 1rem;
-        }
+    /* ===== Tarjetas de páginas ===== */
+    .page-card {
+        background: #1f2937;
+        border-radius: 15px;
+        padding: 2rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s forwards;
+    }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: #00b894;
-        }
+    .page-card:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+        background: #374151;
+    }
 
-        header p {
-            font-size: 1.1rem;
-            color: #dfe6e9;
-        }
+    .page-card h2 {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+        color: #fff;
+    }
+    .page-card p {
+        font-size: 0.95rem;
+        color: #9ca3af;
+    }
+    .page-icon {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-            padding: 2rem;
-            width: 90%;
-            max-width: 1000px;
-        }
-
-        .page-card {
-            background: #2d3436;
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.2s, background 0.2s;
-            cursor: pointer;
-        }
-
-        .page-card:hover {
-            transform: scale(1.05);
-            background: #00b894;
-        }
-
-        .page-card h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .page-card p {
-            font-size: 0.9rem;
-            color: #dfe6e9;
-        }
-    </style>
+    /* ===== Animación ===== */
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Mi Plataforma Web</h1>
-        <p>Selecciona una página para abrirla</p>
-    </header>
+<header>
+    <h1>Mi Plataforma Profesional</h1>
+    <p>Selecciona una página para abrirla</p>
+</header>
 
-    <main>
-        <div class="grid-container" id="pagesContainer">
-            <!-- Los enlaces se generarán desde JS -->
-        </div>
-    </main>
+<main>
+    <div class="grid-container" id="pagesContainer">
+        <!-- Tarjetas generadas por JS -->
+    </div>
+</main>
 
-    <script>
-        // ===== JS =====
-        const pages = [
-            { name: "Página 1", description: "Descripción de la página 1", url: "pagina1.html" },
-            { name: "Página 2", description: "Descripción de la página 2", url: "pagina2.html" },
-            { name: "Página 3", description: "Descripción de la página 3", url: "pagina3.html" },
-            { name: "Página 4", description: "Descripción de la página 4", url: "pagina4.html" }
-        ];
+<script>
+    // ===== Lista de páginas =====
+    const pages = [
+        { name: "Dashboard", description: "Visión general de todos tus datos", url: "dashboard.html", icon: "📊" },
+        { name: "Blog", description: "Tus artículos y publicaciones", url: "blog.html", icon: "✍️" },
+        { name: "Galería", description: "Todas tus imágenes y fotos", url: "galeria.html", icon: "🖼️" },
+        { name: "Contacto", description: "Formulario de contacto y soporte", url: "contacto.html", icon: "📞" }
+    ];
 
-        const container = document.getElementById("pagesContainer");
+    const container = document.getElementById("pagesContainer");
 
-        pages.forEach(page => {
-            const card = document.createElement("div");
-            card.classList.add("page-card");
-            card.innerHTML = `
-                <h2>${page.name}</h2>
-                <p>${page.description}</p>
-            `;
+    pages.forEach((page, index) => {
+        const card = document.createElement("div");
+        card.classList.add("page-card");
+        card.style.animationDelay = `${index * 0.1}s`; // efecto cascada
 
-            card.addEventListener("click", () => {
-                window.location.href = page.url;
-            });
+        card.innerHTML = `
+            <span class="page-icon">${page.icon}</span>
+            <h2>${page.name}</h2>
+            <p>${page.description}</p>
+        `;
 
-            container.appendChild(card);
+        card.addEventListener("click", () => {
+            window.location.href = page.url;
         });
-    </script>
+
+        container.appendChild(card);
+    });
+</script>
 </body>
 </html>
