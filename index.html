@@ -72,9 +72,57 @@
 
     /* Modal */
     .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:10;}
-    .modal-content{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:100%;box-shadow:0 12px 50px rgba(0,0,0,0.2);}
+    .modal-content{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:100%;box-shadow:0 12px 50px rgba(0,0,0,0.2);position:relative;}
     .modal-content input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
     .modal-content button{width:100%;padding:12px;margin-top:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
+    .close-modal{
+      position:absolute;
+      top:10px;
+      right:12px;
+      font-size:1.5rem;
+      font-weight:bold;
+      color:#2563eb;
+      cursor:pointer;
+    }
+
+    /* Loading Screen */
+    .loading{
+      position: fixed;
+      inset:0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+    .loading-box{
+      background:#fff;
+      padding:30px 40px;
+      border-radius:12px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+      display:flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    .loading-box p{
+      font-size:1.2rem;
+      font-weight:600;
+      color:#2563eb;
+    }
+    .spinner{
+      width:40px;
+      height:40px;
+      border:5px solid #ddd;
+      border-top-color:#2563eb;
+      border-radius:50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin{
+      0%{transform:rotate(0deg);}
+      100%{transform:rotate(360deg);}
+    }
 
     @keyframes fadeInUp{
       0%{opacity:0;transform:translateY(40px)}
@@ -139,10 +187,19 @@
   <!-- Modal de login -->
   <div class="modal" id="loginModal">
     <div class="modal-content">
+      <span class="close-modal" id="closeModal">&times;</span>
       <h2 style="text-align:center;margin-bottom:20px;color:#2563eb;">Iniciar Sesión</h2>
       <input type="text" id="loginUsername" placeholder="Nombre de usuario" autocomplete="off">
       <input type="password" id="loginPassword" placeholder="Contraseña">
       <button id="loginBtn">Iniciar Sesión</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loadingScreen" style="display:none;">
+    <div class="loading-box">
+      <p id="loadingMessage">Iniciando sesión...</p>
+      <div class="spinner"></div>
     </div>
   </div>
 
@@ -171,6 +228,11 @@
       document.getElementById('loginModal').style.display='flex';
     });
 
+    // Cerrar modal
+    document.getElementById('closeModal').addEventListener('click', ()=>{
+      document.getElementById('loginModal').style.display='none';
+    });
+
     // Login usando username
     document.getElementById('loginBtn').addEventListener('click', async ()=>{
       const username = document.getElementById('loginUsername').value.trim();
@@ -182,7 +244,6 @@
       }
 
       try {
-        // Buscar el usuario en Firestore por username
         const querySnapshot = await db.collection('usuarios').where('username', '==', username).get();
         if(querySnapshot.empty){
           alert('Usuario no encontrado');
@@ -190,13 +251,20 @@
         }
 
         const userData = querySnapshot.docs[0].data();
-        const email = userData.email; // Obtenemos el email registrado
+        const email = userData.email;
 
-        // Iniciar sesión con email y contraseña
         await auth.signInWithEmailAndPassword(email, password);
 
-        // Redirigir a plataforma
-        window.location.href = 'plataforma.html';
+        // Mostrar loading y mensaje de éxito
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingMessage = document.getElementById('loadingMessage');
+        loadingMessage.textContent = "Credenciales correctas. Iniciando sesión...";
+        loadingScreen.style.display = "flex";
+
+        setTimeout(()=>{
+          window.location.href = 'plataforma.html';
+        },1500);
+
       } catch(error){
         console.error(error);
         alert('Usuario o contraseña incorrectos');
