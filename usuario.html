@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro — ModularHost</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#f5f5f5;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}
+  .form-container{background:#fff;padding:40px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);width:100%;max-width:400px;}
+  h2{text-align:center;margin-bottom:24px;color:#2563eb;}
+  input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
+  button{width:100%;padding:12px;margin-top:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
+  button:hover{background:#1d4ed8;}
+  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
+  .modal-content{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:100%;}
+</style>
+</head>
+<body>
+<div class="form-container">
+  <h2>Registro Usuario</h2>
+  <input type="text" id="fullname" placeholder="Nombre completo">
+  <input type="text" id="username" placeholder="Nombre de usuario">
+  <input type="email" id="email" placeholder="Correo electrónico">
+  <input type="password" id="password" placeholder="Contraseña">
+  <button id="registerBtn">Registrar</button>
+</div>
+
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="loginUsername" placeholder="Nombre de usuario">
+    <input type="password" id="loginPassword" placeholder="Contraseña">
+    <button id="loginBtn">Iniciar Sesión</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBegMx8SAdiEoW9Ik8akA7XJEaijvD5gy8",
+  authDomain: "modularhost.firebaseapp.com",
+  projectId: "modularhost",
+  storageBucket: "modularhost.firebasestorage.app",
+  messagingSenderId: "383598848442",
+  appId: "1:383598848442:web:f87fc6cced7db553535583",
+  measurementId: "G-03MG3Y0JQ0"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+const registerBtn = document.getElementById('registerBtn');
+registerBtn.addEventListener('click', ()=>{
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const username = document.getElementById('username').value;
+  auth.createUserWithEmailAndPassword(email,password)
+  .then(userCredential=>{
+    alert('Usuario registrado con éxito');
+    document.getElementById('loginModal').style.display='flex';
+  })
+  .catch(error=>{
+    alert(error.message);
+  });
+});
+
+const loginBtn = document.getElementById('loginBtn');
+loginBtn.addEventListener('click',()=>{
+  const username = document.getElementById('loginUsername').value;
+  const password = document.getElementById('loginPassword').value;
+
+  auth.signInWithEmailAndPassword(username+'@example.com',password)
+  .then(()=>{
+    window.location.href='plataforma.html';
+  })
+  .catch(error=>{
+    alert('Usuario o contraseña incorrectos');
+  });
+});
+</script>
+</body>
+</html>
