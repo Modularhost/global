@@ -18,6 +18,7 @@
       --shadow:0 12px 50px rgba(0,0,0,0.1);
       --logo-bg:#2563eb;
       --logo-line:#10b981;
+      --particle-color:rgba(107,114,128,0.7);
       font-family:"Poppins", "Segoe UI", sans-serif;
     }
     *{box-sizing:border-box;}
@@ -147,7 +148,7 @@
         this.dx=(Math.random()-0.5)*1.2;
         this.dy=(Math.random()-0.5)*1.2;
       }
-      draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='#6366f1';ctx.fill();}
+      draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle='var(--particle-color)';ctx.fill();}
       update(){
         this.x+=this.dx;
         this.y+=this.dy;
@@ -167,7 +168,7 @@
           const p2=particles[j];
           const dist=Math.hypot(p.x-p2.x,p.y-p2.y);
           if(dist<140){
-            ctx.beginPath();ctx.strokeStyle='rgba(37,99,235,0.15)';ctx.lineWidth=1;
+            ctx.beginPath();ctx.strokeStyle='rgba(107,114,128,0.15)';ctx.lineWidth=1;
             ctx.moveTo(p.x,p.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
           }
         }
