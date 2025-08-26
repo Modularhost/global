@@ -54,25 +54,30 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Registro de usuario
+// REGISTRO
 document.getElementById('registerBtn').addEventListener('click', ()=>{
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const fullname = document.getElementById('fullname').value;
-  const username = document.getElementById('username').value;
+  const fullname = document.getElementById('fullname').value.trim();
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  if(!fullname || !username || !email || !password){
+    alert('Todos los campos son obligatorios');
+    return;
+  }
 
   auth.createUserWithEmailAndPassword(email,password)
   .then(userCredential=>{
     const user = userCredential.user;
 
-    // Guardar datos adicionales en Firestore
+    // Guardar en Firestore
     db.collection('usuarios').doc(user.uid).set({
       fullname: fullname,
       username: username,
       email: email
     })
     .then(()=>{
-      alert('Usuario registrado con éxito');
+      alert('Usuario registrado correctamente');
       document.getElementById('loginModal').style.display='flex';
     })
     .catch(error=>{
@@ -84,27 +89,36 @@ document.getElementById('registerBtn').addEventListener('click', ()=>{
   });
 });
 
-// Login de usuario
+// LOGIN
 document.getElementById('loginBtn').addEventListener('click', ()=>{
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+
+  if(!email || !password){
+    alert('Ingrese correo y contraseña');
+    return;
+  }
 
   auth.signInWithEmailAndPassword(email,password)
   .then(userCredential=>{
-    // Opcional: obtener datos adicionales del usuario
     const uid = userCredential.user.uid;
+
     db.collection('usuarios').doc(uid).get()
     .then(doc=>{
       if(doc.exists){
         const data = doc.data();
         console.log('Usuario:', data);
-        // Redirigir a plataforma
         window.location.href='plataforma.html';
+      } else {
+        alert('Usuario no encontrado en Firestore');
       }
+    })
+    .catch(err=>{
+      console.error(err);
     });
   })
   .catch(error=>{
-    alert('Usuario o contraseña incorrectos');
+    alert('Correo o contraseña incorrectos');
   });
 });
 </script>
