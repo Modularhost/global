@@ -15,32 +15,55 @@
         flex-direction: column;
         align-items: center;
     }
+
     header {
         text-align: center;
         padding: 2rem 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #1f2937;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
+
     header h1 {
-        font-size: 2.8rem;
-        margin-bottom: 0.5rem;
+        font-size: 2.2rem;
         color: #4ade80;
-        letter-spacing: 1px;
     }
-    header p {
-        font-size: 1.1rem;
-        color: #cbd5e1;
+
+    #logoutBtn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background: #ef4444;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    #logoutBtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
     /* ===== Grid de páginas ===== */
+    main{
+        flex:1;
+        width:90%;
+        max-width:1100px;
+        padding:2rem;
+    }
+
     .grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 2rem;
-        padding: 2rem;
-        width: 90%;
-        max-width: 1100px;
     }
 
-    /* ===== Tarjetas de páginas ===== */
     .page-card {
         background: #1f2937;
         border-radius: 15px;
@@ -65,26 +88,28 @@
         margin: 0.5rem 0;
         color: #fff;
     }
+
     .page-card p {
         font-size: 0.95rem;
         color: #9ca3af;
     }
+
     .page-icon {
         font-size: 2.5rem;
         display: block;
         margin-bottom: 0.5rem;
     }
 
-    /* ===== Animación ===== */
     @keyframes fadeInUp {
         to { opacity: 1; transform: translateY(0); }
     }
 </style>
 </head>
 <body>
+
 <header>
     <h1>Mi Plataforma Profesional</h1>
-    <p>Selecciona una página para abrirla</p>
+    <button id="logoutBtn">Cerrar sesión</button>
 </header>
 
 <main>
@@ -93,7 +118,39 @@
     </div>
 </main>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
+    // ===== Config Firebase =====
+    const firebaseConfig = {
+        apiKey: "AIzaSyBegMx8SAdiEoW9Ik8akA7XJEaijvD5gy8",
+        authDomain: "modularhost.firebaseapp.com",
+        projectId: "modularhost",
+        storageBucket: "modularhost.firebasestorage.app",
+        messagingSenderId: "383598848442",
+        appId: "1:383598848442:web:f87fc6cced7db553535583",
+        measurementId: "G-03MG3Y0JQ0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // ===== Verificar sesión =====
+    auth.onAuthStateChanged(user => {
+        if (!user) {
+            window.location.href = "index.html"; // Redirige si no hay sesión
+        }
+    });
+
+    // ===== Logout =====
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        auth.signOut().then(() => {
+            window.location.href = "index.html";
+        });
+    });
+
     // ===== Lista de páginas =====
     const pages = [
         { name: "Dashboard", description: "Visión general de todos tus datos", url: "dashboard.html", icon: "📊" },
@@ -108,19 +165,17 @@
         const card = document.createElement("div");
         card.classList.add("page-card");
         card.style.animationDelay = `${index * 0.1}s`; // efecto cascada
-
         card.innerHTML = `
             <span class="page-icon">${page.icon}</span>
             <h2>${page.name}</h2>
             <p>${page.description}</p>
         `;
-
         card.addEventListener("click", () => {
             window.location.href = page.url;
         });
-
         container.appendChild(card);
     });
 </script>
+
 </body>
 </html>
