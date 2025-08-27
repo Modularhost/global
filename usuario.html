@@ -1,126 +1,131 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Registro — ModularHost</title>
-<style>
-  body{font-family:Arial,sans-serif;background:#f5f5f5;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}
-  .form-container{background:#fff;padding:40px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);width:100%;max-width:400px;}
-  h2{text-align:center;margin-bottom:24px;color:#2563eb;}
-  input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
-  button{width:100%;padding:12px;margin-top:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
-  button:hover{background:#1d4ed8;}
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
-  .modal-content{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:100%;}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro — ModularHost</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f5f5f5;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}
+    .form-container{background:#fff;padding:40px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1);width:100%;max-width:400px;}
+    h2{text-align:center;margin-bottom:24px;color:#2563eb;}
+    input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
+    button{width:100%;padding:12px;margin-top:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
+    button:hover{background:#1d4ed8;}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;}
+    .modal-content{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:100%;}
+  </style>
 </head>
 <body>
-<div class="form-container">
-  <h2>Registro Usuario</h2>
-  <input type="text" id="fullname" placeholder="Nombre completo">
-  <input type="text" id="username" placeholder="Nombre de usuario">
-  <input type="email" id="email" placeholder="Correo electrónico">
-  <input type="password" id="password" placeholder="Contraseña">
-  <button id="registerBtn">Registrar</button>
-</div>
-
-<div class="modal" id="loginModal">
-  <div class="modal-content">
-    <h2>Iniciar Sesión</h2>
-    <input type="email" id="loginEmail" placeholder="Correo electrónico">
-    <input type="password" id="loginPassword" placeholder="Contraseña">
-    <button id="loginBtn">Iniciar Sesión</button>
+  <div class="form-container">
+    <h2>Registro Usuario</h2>
+    <input type="text" id="fullname" placeholder="Nombre completo">
+    <input type="text" id="username" placeholder="Nombre de usuario">
+    <input type="email" id="email" placeholder="Correo electrónico">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button id="registerBtn">Registrar</button>
   </div>
-</div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <h2>Iniciar Sesión</h2>
+      <input type="text" id="loginUsername" placeholder="Nombre de usuario">
+      <input type="password" id="loginPassword" placeholder="Contraseña">
+      <button id="loginBtn">Iniciar Sesión</button>
+    </div>
+  </div>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBegMx8SAdiEoW9Ik8akA7XJEaijvD5gy8",
-  authDomain: "modularhost.firebaseapp.com",
-  projectId: "modularhost",
-  storageBucket: "modularhost.firebasestorage.app",
-  messagingSenderId: "383598848442",
-  appId: "1:383598848442:web:f87fc6cced7db553535583",
-  measurementId: "G-03MG3Y0JQ0"
-};
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, collection, addDoc, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQHwo1RwucIRAIlqpo3GgRJNmnQlXoNDM",
+      authDomain: "album-bc4e1.firebaseapp.com",
+      projectId: "album-bc4e1",
+      storageBucket: "album-bc4e1.firebasestorage.app",
+      messagingSenderId: "1041635546059",
+      appId: "1:1041635546059:web:79ff3e516a50b5190ddc4e",
+      measurementId: "G-RWGW4F6JCT"
+    };
 
-// REGISTRO
-document.getElementById('registerBtn').addEventListener('click', ()=>{
-  const fullname = document.getElementById('fullname').value.trim();
-  const username = document.getElementById('username').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  if(!fullname || !username || !email || !password){
-    alert('Todos los campos son obligatorios');
-    return;
-  }
+    // REGISTRO
+    document.getElementById('registerBtn').addEventListener('click', async () => {
+      const fullname = document.getElementById('fullname').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
 
-  auth.createUserWithEmailAndPassword(email,password)
-  .then(userCredential=>{
-    const user = userCredential.user;
-
-    // Guardar en Firestore
-    db.collection('usuarios').doc(user.uid).set({
-      fullname: fullname,
-      username: username,
-      email: email
-    })
-    .then(()=>{
-      alert('Usuario registrado correctamente');
-      document.getElementById('loginModal').style.display='flex';
-    })
-    .catch(error=>{
-      console.error('Error guardando datos adicionales:', error);
-    });
-  })
-  .catch(error=>{
-    alert(error.message);
-  });
-});
-
-// LOGIN
-document.getElementById('loginBtn').addEventListener('click', ()=>{
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value.trim();
-
-  if(!email || !password){
-    alert('Ingrese correo y contraseña');
-    return;
-  }
-
-  auth.signInWithEmailAndPassword(email,password)
-  .then(userCredential=>{
-    const uid = userCredential.user.uid;
-
-    db.collection('usuarios').doc(uid).get()
-    .then(doc=>{
-      if(doc.exists){
-        const data = doc.data();
-        console.log('Usuario:', data);
-        window.location.href='plataforma.html';
-      } else {
-        alert('Usuario no encontrado en Firestore');
+      if (!fullname || !username || !email || !password) {
+        alert('Todos los campos son obligatorios');
+        return;
       }
-    })
-    .catch(err=>{
-      console.error(err);
+
+      // Verificar si el nombre de usuario ya existe
+      const usernameQuery = query(collection(db, 'usuarios'), where('username', '==', username));
+      const usernameSnapshot = await getDocs(usernameQuery);
+      if (!usernameSnapshot.empty) {
+        alert('El nombre de usuario ya está en uso. Elige otro.');
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Guardar datos adicionales en Firestore
+        await addDoc(collection(db, 'usuarios'), {
+          uid: user.uid,
+          fullname,
+          username,
+          email,
+          createdAt: Date.now()
+        });
+
+        alert('Usuario registrado correctamente');
+        document.getElementById('loginModal').style.display = 'flex';
+      } catch (error) {
+        console.error('Error en registro:', error);
+        alert(error.message);
+      }
     });
-  })
-  .catch(error=>{
-    alert('Correo o contraseña incorrectos');
-  });
-});
-</script>
+
+    // LOGIN
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!username || !password) {
+        alert('Ingrese nombre de usuario y contraseña');
+        return;
+      }
+
+      try {
+        // Buscar el correo asociado al nombre de usuario
+        const usernameQuery = query(collection(db, 'usuarios'), where('username', '==', username));
+        const usernameSnapshot = await getDocs(usernameQuery);
+
+        if (usernameSnapshot.empty) {
+          alert('Nombre de usuario no encontrado');
+          return;
+        }
+
+        const userDoc = usernameSnapshot.docs[0].data();
+        const email = userDoc.email;
+
+        // Iniciar sesión con correo y contraseña
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log('Usuario autenticado:', userCredential.user.uid);
+        window.location.href = 'index.html';
+      } catch (error) {
+        console.error('Error en inicio de sesión:', error);
+        alert('Nombre de usuario o contraseña incorrectos');
+      }
+    });
+  </script>
 </body>
 </html>
