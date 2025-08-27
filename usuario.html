@@ -21,7 +21,7 @@
     <input type="text" id="fullname" placeholder="Nombre completo">
     <input type="text" id="username" placeholder="Nombre de usuario">
     <input type="email" id="email" placeholder="Correo electrónico">
-    <input type="password" id="password" placeholder="Contraseña">
+    <input type="password" id="password" placeholder="Contraseña (mínimo 6 caracteres)">
     <button id="registerBtn">Registrar</button>
   </div>
 
@@ -53,6 +53,12 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Validar correo electrónico
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
     // REGISTRO
     document.getElementById('registerBtn').addEventListener('click', async () => {
       const fullname = document.getElementById('fullname').value.trim();
@@ -62,6 +68,16 @@
 
       if (!fullname || !username || !email || !password) {
         alert('Todos los campos son obligatorios');
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        alert('Por favor, ingrese un correo electrónico válido');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres');
         return;
       }
 
@@ -90,7 +106,13 @@
         document.getElementById('loginModal').style.display = 'flex';
       } catch (error) {
         console.error('Error en registro:', error);
-        alert(error.message);
+        if (error.code === 'auth/email-already-in-use') {
+          alert('El correo electrónico ya está registrado');
+        } else if (error.code === 'auth/invalid-email') {
+          alert('El correo electrónico no es válido');
+        } else {
+          alert('Error al registrar: ' + error.message);
+        }
       }
     });
 
@@ -123,7 +145,13 @@
         window.location.href = 'index.html';
       } catch (error) {
         console.error('Error en inicio de sesión:', error);
-        alert('Nombre de usuario o contraseña incorrectos');
+        if (error.code === 'auth/wrong-password') {
+          alert('Contraseña incorrecta');
+        } else if (error.code === 'auth/user-not-found') {
+          alert('Usuario no encontrado');
+        } else {
+          alert('Error al iniciar sesión: ' + error.message);
+        }
       }
     });
   </script>
