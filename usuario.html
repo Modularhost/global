@@ -66,6 +66,8 @@
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
 
+      console.log('Datos de registro:', { fullname, username, email, password }); // Depuración
+
       if (!fullname || !username || !email || !password) {
         alert('Todos los campos son obligatorios');
         return;
@@ -92,6 +94,7 @@
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        console.log('Usuario registrado:', user.uid); // Depuración
 
         // Guardar datos adicionales en Firestore
         await addDoc(collection(db, 'usuarios'), {
@@ -105,11 +108,13 @@
         alert('Usuario registrado correctamente');
         document.getElementById('loginModal').style.display = 'flex';
       } catch (error) {
-        console.error('Error en registro:', error);
+        console.error('Error en registro:', error.code, error.message); // Depuración
         if (error.code === 'auth/email-already-in-use') {
           alert('El correo electrónico ya está registrado');
         } else if (error.code === 'auth/invalid-email') {
           alert('El correo electrónico no es válido');
+        } else if (error.code === 'auth/weak-password') {
+          alert('La contraseña es demasiado débil');
         } else {
           alert('Error al registrar: ' + error.message);
         }
@@ -120,6 +125,8 @@
     document.getElementById('loginBtn').addEventListener('click', async () => {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
+
+      console.log('Datos de inicio de sesión:', { username, password }); // Depuración
 
       if (!username || !password) {
         alert('Ingrese nombre de usuario y contraseña');
@@ -138,13 +145,14 @@
 
         const userDoc = usernameSnapshot.docs[0].data();
         const email = userDoc.email;
+        console.log('Correo encontrado:', email); // Depuración
 
         // Iniciar sesión con correo y contraseña
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log('Usuario autenticado:', userCredential.user.uid);
         window.location.href = 'index.html';
       } catch (error) {
-        console.error('Error en inicio de sesión:', error);
+        console.error('Error en inicio de sesión:', error.code, error.message); // Depuración
         if (error.code === 'auth/wrong-password') {
           alert('Contraseña incorrecta');
         } else if (error.code === 'auth/user-not-found') {
